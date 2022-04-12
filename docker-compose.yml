@@ -1,0 +1,44 @@
+version: "3.2"
+
+services:
+
+  wordpress:
+    depends_on:
+      - mysql
+
+    image: wordpress:latest
+    volumes:
+      - wordpress:/var/www/html
+      - ./wp-config.php:/var/www/html/wp-config.php
+      - ./themes:/var/www/html/wp-content/themes
+    ports:
+      - "8000:80"
+    restart: always
+    env_file:
+      - wordpress.env
+
+#  wordpress:
+#    build: .
+#    restart: unless-stopped
+#    ports:
+#      - "8000:80"
+#    env_file:
+#      - wordpress.env
+#    depends_on:
+#      - mysql
+#    volumes:
+#      - wordpress:/var/www/html
+#      - ./plugins:/var/www/html/wp-content/plugins
+#      - ./themes:/var/www/html/wp-content/themes
+#      - ./wp-config.php:/var/www/html/wp-config.php
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file:
+      - wordpress.env
+    volumes:
+      - mysql:/var/www/html
+
+volumes:
+  wordpress:
+  mysql:
